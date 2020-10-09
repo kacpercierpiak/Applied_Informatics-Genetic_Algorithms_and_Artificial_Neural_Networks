@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MLDataLib\MLDataLib.csproj" />
     <ProjectReference Include="..\NauralGasLib\NauralGasLib.csproj" />
   </ItemGroup>
 
