@@ -9,9 +9,4 @@
     <ProjectReference Include="..\NauralGasLib\NauralGasLib.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>
