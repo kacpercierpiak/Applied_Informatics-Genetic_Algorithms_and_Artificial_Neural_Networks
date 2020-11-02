@@ -2,7 +2,7 @@
 
 namespace MLDataLib.Services
 {
-    public class MLDataService
+    public class MLDataService : IMLDataService
     {
         public enum MLRepos { Iris, Lab1 };
         private IrisMLRepository _irisMLRepository { get; set; } = new IrisMLRepository();

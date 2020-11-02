@@ -19,6 +19,7 @@ namespace MLDataLib.Models
                 _ML = Directory.GetCurrentDirectory() + "\\Data\\" + value;
             }
         }
+
         public string Test {
             get {
                 return _Test;
