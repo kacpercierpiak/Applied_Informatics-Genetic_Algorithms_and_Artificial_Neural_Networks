@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="DesktopManager.ScatterExample"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:DesktopManager"
+             xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance local:ScatterExample}" Width="400" Height="450">
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" MinHeight="157"></RowDefinition>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Button Margin="9,115,10,10" Click="RandomizeOnClick">Randomize</Button>
+        <lvc:CartesianChart Grid.Row="1" LegendLocation="Bottom" Background="White"  >
+            <lvc:CartesianChart.Series>
+                <lvc:ScatterSeries Title="Series A" Values="{Binding ValuesA}" />
+
+            </lvc:CartesianChart.Series>
+            <lvc:CartesianChart.AxisY>
+                <!--setting the axis unit improved the labels rounding rule-->
+                <lvc:Axis Unit="100"></lvc:Axis>
+            </lvc:CartesianChart.AxisY>
+            <lvc:CartesianChart.AxisX>
+                <!--setting the axis unit improved the labels rounding rule-->
+                <lvc:Axis Unit="100" ></lvc:Axis>
+            </lvc:CartesianChart.AxisX>
+        </lvc:CartesianChart>
+        
+        <TextBox x:Name="Groups_qty"  materialDesign:HintAssist.Hint="Groups Qty"
+  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+  VerticalAlignment="Top"  Text="10" HorizontalAlignment="Left" Width="65" Height="43" Margin="5,0,0,0" />
+        <TextBox x:Name="Element_qty"  materialDesign:HintAssist.Hint="Elements Qty"
+  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+  VerticalAlignment="Top" Text="20" HorizontalAlignment="Left" Width="65" Margin="5,43,0,0" Height="43" />
+        <TextBox x:Name="Range_min"  materialDesign:HintAssist.Hint="Min Value"
+  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+  VerticalAlignment="Top"  Text="0" HorizontalAlignment="Left" Width="65" Height="43" Margin="75,0,0,0" />
+        <TextBox x:Name="Range_max"  materialDesign:HintAssist.Hint="Max Value"
+  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+  VerticalAlignment="Top" Text="1000" HorizontalAlignment="Left" Width="65" Margin="75,43,0,0" Height="43" />
+
+        <TextBox x:Name="Step_Range_min"  materialDesign:HintAssist.Hint="Step Min"
+  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+  VerticalAlignment="Top"  Text="10" HorizontalAlignment="Left" Width="65" Height="43" Margin="145,0,0,0" />
+        <TextBox x:Name="Step_Range_max"  materialDesign:HintAssist.Hint="Step Max"
+  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+  VerticalAlignment="Top" Text="50" HorizontalAlignment="Left" Width="65" Margin="145,43,0,0" Height="43" />
+
+        <TextBox x:Name="Density_min"  materialDesign:HintAssist.Hint="Density_min"
+  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+  VerticalAlignment="Top"  Text="150" HorizontalAlignment="Left" Width="65" Height="43" Margin="215,0,0,0" />
+    </Grid>
+</UserControl>
