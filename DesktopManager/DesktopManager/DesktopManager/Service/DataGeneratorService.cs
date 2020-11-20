@@ -20,18 +20,17 @@ namespace DesktopManager.Service
 
     class DataGeneratorService
     {
-        public DataGroup dataGroup { get; private set; }
-        public DataGroup neurons { get; private set; }
-        public int Point_Densinity { get; set; }
+        public List<DataGroup> dataGroup { get; private set; }
+        public List<DataGroup> neurons { get; private set; }
         Random random { get; set; }
 
         public DataGeneratorService()
         {
-            dataGroup = new DataGroup();
-            dataGroup.Position = new Position();
-            dataGroup.SubPoints = new List<Position>();
-            neurons = new DataGroup();
-            neurons.Position = new Position();
+            dataGroup = new List<DataGroup>();
+            
+            neurons = new List<DataGroup>();
+            random = new Random();
+            
         }
         private double DistanceCalc(Position position, Position newPosition)
         {
@@ -46,21 +45,24 @@ namespace DesktopManager.Service
                 return false;          
         }
 
-        private bool PostionVerification(Position position, DataGroup dataGroup)
+        private bool PositionVerification(Position position, List<DataGroup> dataGroup, int densinity)
         {
-            if (isValidPosition(dataGroup.Position, position, Point_Densinity) || dataGroup.SubPoints.Any(p => isValidPosition(p, position, Point_Densinity)))
-                return true;
+
+            if (dataGroup.Any(d => (isValidPosition(d.Position, position, densinity) || d.SubPoints.Any(p => isValidPosition(p, position, densinity)))))
+                return false;
             else
-                return false;        
+                return true;
+                  
         }
-        private Position GeneratePoint(int min, int max, DataGroup dataGroup)
+        private Position GeneratePoint(int min, int max, List<DataGroup> dataGroup, int densinity)
         {
             var position = new Position();
+            random = new Random();
             do
             {
                 position.X = random.Next(min, max);
                 position.Y = random.Next(min, max);
-            } while (!PostionVerification(position, dataGroup));
+            } while (!PositionVerification(position, dataGroup, densinity));
 
             return position;
         }
@@ -69,6 +71,7 @@ namespace DesktopManager.Service
         private List<Position> GenerateSubPoints(Position position, int qty, int stepMin, int stepMax)
         {
             var positionList = new List<Position>();
+            random = new Random();
             for (int i = 0;i< qty;i++)
             {
                 var subPosition = new Position();
@@ -80,25 +83,47 @@ namespace DesktopManager.Service
 
             }
             return positionList;
-        }      
+        }
         
-
-        public void Generate(int min, int max, int stepMin, int stepMax, int groupQty, int elementQty)
+        public void GenerateNeurons(int min, int max, int groupQty, int densinity)
         {
-            dataGroup = new DataGroup();
-            dataGroup.Position = new Position();
-            dataGroup.SubPoints = new List<Position>();
-            neurons = new DataGroup();
-            neurons.Position = new Position();
+            neurons.Clear();         
+            
+            for (int i = 0; i < groupQty; i++)
+            {
+                var neuron = new DataGroup();
+                neuron.SubPoints = new List<Position>();
+                neuron.Position = GeneratePoint(min, max, neurons, densinity);
+                neurons.Add(neuron);
+            }
+        }
+
+        public void GenerateEmptyNeurons(int groupQty)
+        {
+            neurons.Clear();
 
             for (int i = 0; i < groupQty; i++)
-            {                
-                dataGroup.Position = GeneratePoint(min, max, dataGroup);
-                dataGroup.SubPoints = GenerateSubPoints(dataGroup.Position, elementQty, stepMin, stepMax);                
-                neurons.Position = GeneratePoint(min, max, neurons);
+            {
+                var neuron = new DataGroup();
+                neuron.SubPoints = new List<Position>();
+                neuron.Position =new Position() { X=0, Y=0};
+                neurons.Add(neuron);
             }
-
-             
         }
+
+        public void GenerateData(int min, int max, int stepMin, int stepMax, int groupQty, int elementQty, int densinity)
+        {
+            dataGroup.Clear();
+           
+            for (int i = 0; i < groupQty; i++)
+            {
+                var data = new DataGroup();
+                data.Position = GeneratePoint(min, max, dataGroup, densinity);
+                data.SubPoints = GenerateSubPoints(data.Position, elementQty, stepMin, stepMax);
+                dataGroup.Add(data);
+            }
+        }    
+
+     
     }
 }

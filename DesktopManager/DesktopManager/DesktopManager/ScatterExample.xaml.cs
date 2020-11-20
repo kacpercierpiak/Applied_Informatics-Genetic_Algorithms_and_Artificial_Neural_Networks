@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DesktopManager.Service;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -21,134 +22,84 @@ namespace DesktopManager
     /// </summary>
     public partial class ScatterExample : UserControl
     {
-        private ScottPlot.Plot plt { get; set; }        
-        private List<Data> DataList { get; set; }
-        private List<Data> NeuronsList { get; set; }
-        public class Data
-        {
-            public int X { get; set; }
-            public int Y { get; set; }
-        }
+        private ScottPlot.Plot plt { get; set; }
+        private DataGeneratorService dataService {get;set;}
+        private WTAService wtaService { get; set; }
+        private readonly int groupQty = 10;
+        private readonly int elementQty = 20;
+
+
         public ScatterExample()
         {
             InitializeComponent();
-            NeuronsList = new List<Data>();
-            DataList = new List<Data>();
-            var r = new Random();
+            dataService = new DataGeneratorService();
+            dataService.GenerateData(Int32.Parse(Range_min.Text), Int32.Parse(Range_max.Text), Int32.Parse(Step_Range_min.Text), Int32.Parse(Step_Range_max.Text), groupQty, elementQty, Int32.Parse(Density_min.Text));
+            dataService.GenerateEmptyNeurons(groupQty);      
+            GenerateChart(dataService.dataGroup, dataService.neurons, wpfPlot1);
+           
 
+        }
 
-            var plt = new ScottPlot.Plot(400, 300);           
+        private void GenerateChart(List<DataGroup> dataGroups, List<DataGroup> neurons, ScottPlot.WpfPlot wpfPlot)
+        {
 
-            for (var i = 0; i < 10; i++)
-            {
-                var x = 0;
-                var y = 0;
-                do
-                {
-                    x = r.Next(0, 1000);
-                    y = r.Next(0, 1000);
-                } while (DataList.Any(v => Math.Sqrt(Math.Pow(v.X - x, 2) + Math.Pow(v.Y - y, 2)) <= Int32.Parse(Density_min.Text)));
-               
+            dataGroups.ForEach(e => {
+                wpfPlot.plt.PlotPoint(e.Position.X, e.Position.Y, System.Drawing.Color.Blue);
+                e.SubPoints.ForEach(se => wpfPlot.plt.PlotPoint(se.X, se.Y, System.Drawing.Color.Blue));
+            });
 
-                wpfPlot1.plt.PlotPoint(x, y, System.Drawing.Color.Blue);
-                DataList.Add(new Data() { X=x,Y=y});
-
-                var r2 = new Random();
-                for (var j = 0; j < 10; j++)
-                {
-                    var r3 = new Random();
-                    var stepx = r3.Next(Int32.Parse(Step_Range_min.Text), Int32.Parse(Step_Range_max.Text));
-                    var stepy = r3.Next(Int32.Parse(Step_Range_min.Text), Int32.Parse(Step_Range_max.Text));
-                    var sx = r2.Next(x - stepx, x + stepx);
-                    var sy = r2.Next(y - stepy, y + stepy);
-                    wpfPlot1.plt.PlotPoint(sx, sy, System.Drawing.Color.Blue);
-                    DataList.Add(new Data() { X = sx, Y = sy });
-
-                }
-
-                x = 0;
-                y = 0;
-
-                do
-                {
-                    x = r.Next(0, 1000);
-                    y = r.Next(0, 1000);
-                } while (NeuronsList.Any(v => Math.Sqrt(Math.Pow(v.X - x, 2) + Math.Pow(v.Y - y, 2)) <= Int32.Parse(Density_min.Text)));
-
-                wpfPlot1.plt.PlotPoint(x, y, System.Drawing.Color.Red);
-                NeuronsList.Add(new Data() { X = x, Y = y });
-
-            }
-            wpfPlot1.Render();
-
+            neurons.ForEach(e => {
+                wpfPlot.plt.PlotPoint(e.Position.X, e.Position.Y, System.Drawing.Color.Red);
+            });
+            wpfPlot.Render();
         }
 
 
         private void RandomizeNeuronsOnClick(object sender, RoutedEventArgs e)
         {
-            var r = new Random();
-            NeuronsList = new List<Data>();
             wpfPlot1.plt.Clear();
-            DataList.ForEach(x => wpfPlot1.plt.PlotPoint(x.X, x.Y, System.Drawing.Color.Blue));
-            var x = 0;
-            var y = 0;
-            for (var i = 0; i < 10; i++)
-            {
-                do
-                {
-                    x = r.Next(0, 1000);
-                    y = r.Next(0, 1000);
-                } while (NeuronsList.Any(v => Math.Sqrt(Math.Pow(v.X - x, 2) + Math.Pow(v.Y - y, 2)) <= Int32.Parse(Density_min.Text)));
-
-                wpfPlot1.plt.PlotPoint(x, y, System.Drawing.Color.Red);
-                NeuronsList.Add(new Data() { X = x, Y = y });
-            }
-            wpfPlot1.Render();
+            dataService.GenerateNeurons(Int32.Parse(Range_min.Text), Int32.Parse(Range_max.Text), groupQty, Int32.Parse(Density_min.Text));
+            GenerateChart(dataService.dataGroup, dataService.neurons, wpfPlot1);
+        }
+        private void RandomizeEmptyNeuronsOnClick(object sender, RoutedEventArgs e)
+        {
+            wpfPlot1.plt.Clear();
+            dataService.GenerateEmptyNeurons(groupQty);
+            GenerateChart(dataService.dataGroup, dataService.neurons, wpfPlot1);
         }
 
 
-            private void RandomizeOnClick(object sender, RoutedEventArgs e)
+        private void RandomizeOnClick(object sender, RoutedEventArgs e)
         {
-            var r = new Random();
-
-            DataList = new List<Data>();
             wpfPlot1.plt.Clear();
-            NeuronsList.ForEach(x => wpfPlot1.plt.PlotPoint(x.X, x.Y, System.Drawing.Color.Red));
-            for (var i = 0; i < 10; i++)
-            {
-                var x = 0;
-                var y = 0;
-                do
-                {
-                    x = r.Next(0, 1000);
-                    y = r.Next(0, 1000);
-                } while (DataList.Any(v => Math.Sqrt(Math.Pow(v.X - x, 2) + Math.Pow(v.Y - y, 2)) <= Int32.Parse(Density_min.Text)));
-
-
-
-                wpfPlot1.plt.PlotPoint(x, y, System.Drawing.Color.Blue);
-                DataList.Add(new Data() { X = x, Y = y });
-
-                var r2 = new Random();
-                for (var j = 0; j < 10; j++)
-                {
-                    var r3 = new Random();
-                    var stepx = r3.Next(Int32.Parse(Step_Range_min.Text), Int32.Parse(Step_Range_max.Text));
-                    var stepy = r3.Next(Int32.Parse(Step_Range_min.Text), Int32.Parse(Step_Range_max.Text));
-                    var sx = r2.Next(x - stepx, x + stepx);
-                    var sy = r2.Next(y - stepy, y + stepy);
-                    wpfPlot1.plt.PlotPoint(sx, sy, System.Drawing.Color.Blue);
-                    DataList.Add(new Data() { X = sx, Y = sy });
-
-                }
-
-            }
-            wpfPlot1.Render();
+            dataService.GenerateData(Int32.Parse(Range_min.Text), Int32.Parse(Range_max.Text), Int32.Parse(Step_Range_min.Text), Int32.Parse(Step_Range_max.Text), groupQty, elementQty, Int32.Parse(Density_min.Text));
+     
+            GenerateChart(dataService.dataGroup, dataService.neurons, wpfPlot1);
         }
 
         private void ScatterSeries_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
 
+        }
+
+        private void StartTraining(object sender, RoutedEventArgs e)
+        {
+            var balancing = BalancingEnable.IsChecked == true ? Int32.Parse(Balancing.Text) : 0;
+            var isDisabler = false;
+            var iterationDisable = 0;
+            var cycleQty = 0;
+
+            if(Iteration_dis_qty_Enable.IsChecked == true)
+            {
+                isDisabler = true;
+                iterationDisable = Int32.Parse(Iteration_dis_qty.Text);
+                cycleQty = Int32.Parse(PenaltyCycleNo.Text);
+            }
+
+            wtaService = new WTAService(dataService.dataGroup, dataService.neurons);
+            wtaService.Calc(Double.Parse(Training_Ratio.Text), balancing,isDisabler,iterationDisable,cycleQty);
+            wpfPlot2.plt.Clear();
+            GenerateChart(wtaService.dataGroup, wtaService.neuronsList, wpfPlot2);
         }
     }
 }

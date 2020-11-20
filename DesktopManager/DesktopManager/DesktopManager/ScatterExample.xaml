@@ -6,33 +6,67 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:DesktopManager"
              
-             mc:Ignorable="d" d:DataContext="{d:DesignInstance local:ScatterExample}" Width="400" Height="450">
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance local:ScatterExample}" Width="800" Height="354">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="401*"/>
+            <ColumnDefinition Width="399*"/>
+        </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" MinHeight="157"></RowDefinition>
+            <RowDefinition Height="Auto" MinHeight="140"></RowDefinition>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Button Margin="9,115,208,10" Click="RandomizeOnClick">Randomize Data</Button>
+        <Button Margin="37,69,231,0" Click="RandomizeOnClick" Grid.ColumnSpan="1" Height="61" VerticalAlignment="Top" Style="{StaticResource MaterialDesignRaisedButton}">Generate Data</Button>
         <TextBox x:Name="Range_min"  materialDesign:HintAssist.Hint="Min Value"
   Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-  VerticalAlignment="Top"  Text="0" HorizontalAlignment="Left" Width="64" Height="43" Margin="4,0,0,0" />
+  VerticalAlignment="Top"  Text="0" HorizontalAlignment="Left" Width="64" Height="43" Margin="14,0,0,0" />
         <TextBox x:Name="Range_max"  materialDesign:HintAssist.Hint="Max Value"
   Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-  VerticalAlignment="Top" Text="1000" HorizontalAlignment="Left" Width="64" Margin="4,43,0,0" Height="43" />
+  VerticalAlignment="Top" Text="1000" HorizontalAlignment="Left" Width="64" Margin="89,0,0,0" Height="43" />
 
         <TextBox x:Name="Step_Range_min"  materialDesign:HintAssist.Hint="Step Min"
   Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-  VerticalAlignment="Top"  Text="10" HorizontalAlignment="Left" Width="64" Height="43" Margin="74,0,0,0" />
+  VerticalAlignment="Top"  Text="10" HorizontalAlignment="Right" Width="64" Height="42" Margin="0,1,86,0" />
         <TextBox x:Name="Step_Range_max"  materialDesign:HintAssist.Hint="Step Max"
   Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-  VerticalAlignment="Top" Text="50" HorizontalAlignment="Left" Width="64" Margin="74,43,0,0" Height="43" />
+  VerticalAlignment="Top" Text="50" HorizontalAlignment="Left" Width="64" Margin="326,0,0,0" Height="43" />
 
         <TextBox x:Name="Density_min"  materialDesign:HintAssist.Hint="Density_min"
   Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-  VerticalAlignment="Top"  Text="150" HorizontalAlignment="Left" Width="96" Height="43" Margin="144,0,0,0" />
-        <WpfPlot Name="wpfPlot1" Height="191" VerticalAlignment="Top" Grid.Row="1" />
-        <Button Margin="209,115,10,10" Click="RandomizeNeuronsOnClick" Content="Randomize Neurons"/>
+  VerticalAlignment="Top"  Text="25" HorizontalAlignment="Left" Width="76" Height="43" Margin="164,0,0,0" />
+        <WpfPlot Name="wpfPlot1" Height="191" VerticalAlignment="Top" Grid.Row="1" Grid.ColumnSpan="1" HorizontalAlignment="Right" Width="376" Margin="0,0,11,0" />
+        <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Margin="222,57,55,68" Click="RandomizeEmptyNeuronsOnClick" Content="Reset neurons" Grid.ColumnSpan="1"/>
+        <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" Margin="222,109,54,16" Click="RandomizeNeuronsOnClick"  Content="Init Neurons" Grid.ColumnSpan="1"/>
+        <WpfPlot x:Name="wpfPlot2" Height="191" VerticalAlignment="Top" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Width="379" />
+
+
+
+        <TextBox Grid.Column="1" x:Name="Training_Ratio"  materialDesign:HintAssist.Hint="Training Ratio"
+  Style="{StaticResource MaterialDesignFloatingHintTextBox}"  Text="0.5" Width="76" Height="43" Margin="10,2,313,115"                    
+                     />
+        <CheckBox Grid.Column="1"
+    x:Name="BalancingEnable" HorizontalAlignment="Right" Width="20" Height="26" VerticalAlignment="Top" Margin="0,44,256,0">
+
+        </CheckBox>
+        <TextBox Grid.Column="1" x:Name="Balancing"  materialDesign:HintAssist.Hint="Balancing"
+  Style="{StaticResource MaterialDesignFloatingHintTextBox}"  Text="25" Width="76" Height="43"
+                     IsEnabled="{Binding IsChecked, ElementName=BalancingEnable}" Margin="95,2,228,115" 
+                     />
+        <CheckBox Grid.Column="1"
+            x:Name="Iteration_dis_qty_Enable" HorizontalAlignment="Right" Width="20" Height="26" VerticalAlignment="Top" Margin="0,44,169,0"/>
+        <TextBox Grid.Column="1" x:Name="Iteration_dis_qty"  materialDesign:HintAssist.Hint="It_dis_qty"
+            Style="{StaticResource MaterialDesignFloatingHintTextBox}"  Text="1" Width="76" Height="43"
+            IsEnabled="{Binding IsChecked, ElementName=Iteration_dis_qty_Enable}" Margin="182,2,141,115" 
+                     />
+
+        <TextBox Grid.Column="1" x:Name="PenaltyCycleNo"  materialDesign:HintAssist.Hint="Penalty Cycle No"
+            Style="{StaticResource MaterialDesignFloatingHintTextBox}"  Text="10" Height="43"
+            IsEnabled="{Binding IsChecked, ElementName=Iteration_dis_qty_Enable}" Margin="272,2,16,0" VerticalAlignment="Top" 
+                     />
+        <Button Style="{StaticResource MaterialDesignRaisedAccentButton}" Margin="133,81,133,0" Click="StartTraining" Grid.ColumnSpan="1" Height="61" VerticalAlignment="Top"  Content="Start Training" Grid.Column="1"/>
+
+
     </Grid>
 </UserControl>
