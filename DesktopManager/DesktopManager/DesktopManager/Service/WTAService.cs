@@ -60,7 +60,7 @@ namespace DesktopManager.Service
             {
                 neuronsList.Add(new Neuron() { Id = i, Position = new Position() { X = neurons[i].Position.X, Y = neurons[i].Position.Y } });
             }
-            neuronsList.OrderBy(x => Guid.NewGuid()).ToList();
+            neuronsList = neuronsList.OrderBy(x => Guid.NewGuid()).ToList();
             return neuronsList;
         }
         private double SimiliarityCalc(Position neuron, Position iteration)
